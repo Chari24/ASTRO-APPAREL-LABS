@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTRO. | Astro Apparel Labs</title>
+  <!-- Google Fonts: Outfit for Tech Headings, Share Tech Mono for Data, Inter for Body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-88ies default-weather">
+
+  <!-- Atmospheric Particle Canvas -->
+  <canvas id="weather-canvas"></canvas>
+  <div id="frost-overlay"></div>
+
+  <!-- HUD Laser Scanning Line -->
+  <div id="hud-laser-line"></div>
+
+  <!-- Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="#" class="logo" id="header-logo" data-target="hero">ASTRO<span>.</span></a>
+    </div>
+    <nav class="nav-menu" id="main-nav">
+      <a href="#" class="nav-link" id="nav-products" data-target="products">PRODUCTS</a>
+      <a href="#" class="nav-link" id="nav-category" data-target="category">CATEGORY</a>
+      <a href="#" class="nav-link" id="nav-more" data-target="more">MORE</a>
+      <a href="#" class="nav-link" id="nav-about" data-target="about">ABOUT US</a>
+      <a href="#" class="nav-link" id="nav-contact" data-target="contact">CONTACT</a>
+    </nav>
+    <div class="header-right">
+      <button class="icon-btn" id="btn-audio-toggle" title="Toggle System Sound" aria-label="Toggle sound">
+        <!-- Speaker Icon -->
+        <svg id="audio-icon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+          <path class="wave wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke-dasharray="10" stroke-dashoffset="10"/>
+          <path class="wave wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke-dasharray="20" stroke-dashoffset="20"/>
+          <line class="mute-slash" x1="23" y1="1" x2="1" y2="23" style="display: none;"/>
+        </svg>
+      </button>
+      <button class="icon-btn" id="btn-search" title="Search Database" aria-label="Search">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+      <button class="icon-btn" id="btn-cart" title="Open Bag" aria-label="Shopping Cart">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="badge" id="cart-badge">0</span>
+      </button>
+      <button class="icon-btn" id="btn-favorites" title="Wishlist" aria-label="Favorites">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span class="badge" id="favorites-badge">0</span>
+      </button>
+      <!-- Burger menu for mobile -->
+      <button class="icon-btn burger-menu" id="btn-menu" title="Menu" aria-label="Toggle menu">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+    <div class="mobile-nav-content">
+      <button class="close-btn" id="btn-mobile-close">&times;</button>
+      <a href="#" class="mobile-nav-link" data-target="hero">HOME DETAIL</a>
+      <a href="#" class="mobile-nav-link" data-target="products">PRODUCTS</a>
+      <a href="#" class="mobile-nav-link" data-target="category">CATEGORY</a>
+      <a href="#" class="mobile-nav-link" data-target="more">MORE</a>
+      <a href="#" class="mobile-nav-link" data-target="about">ABOUT US</a>
+      <a href="#" class="mobile-nav-link" data-target="contact">CONTACT</a>
+    </div>
+  </div>
+
+  <main class="page-container">
+
+    <!-- ==========================================================================
+         VIEW 1: HOME PAGE (Brand Portal / Explorer Dashboard) - UNIQUE & DIFFERENT
+         ========================================================================== -->
+    <div id="view-hero" class="view-panel active">
+      <div class="brand-hero-header">
+        <span class="new-tag">ORBITAL FABRICATION UNIT 04</span>
+        <h2>ASTRO APPAREL LABS</h2>
+        <p>CLIMATE ISOLATION APPAREL FOR CIVILIAN &amp; SURVEY EXPEDITIONS. ENGINEERED FOR PLANETARY SURFACES AND DEEP ORBITAL SPACE.</p>
+        <div class="brand-hero-actions">
+          <button class="brand-cta-btn btn-primary" onclick="navigateToView('products')">ACCESS CATALOG STORAGE</button>
+          <button class="brand-cta-btn btn-secondary" onclick="navigateToView('about')">LAB CHRONICLES</button>
+        </div>
+      </div>
+
+      <!-- Interactive Explorer Telemetry Dashboard -->
+      <div class="explorer-dashboard-section">
+        <div class="tech-card-title">LIVE PLANETARY EXPEDITION TEAM TELEMETRY</div>
+        
+        <div class="explorer-grid">
+          <!-- Left: Selector Nodes -->
+          <div class="explorer-nodes-column">
+            <!-- Explorer Alpha Card -->
+            <button class="explorer-node-card active" data-explorer="alpha" onclick="selectExplorer('alpha')">
+              <div class="node-pulse-ring">
+                <span class="node-dot"></span>
+              </div>
+              <div class="node-info">
+                <span class="node-id">EXPLORER 01 / ALPHA</span>
+                <span class="node-loc">MARS - SURVEY TEAM C</span>
+              </div>
+            </button>
+
+            <!-- Explorer Beta Card -->
+            <button class="explorer-node-card" data-explorer="beta" onclick="selectExplorer('beta')">
+              <div class="node-pulse-ring">
+                <span class="node-dot"></span>
+              </div>
+              <div class="node-info">
+                <span class="node-id">EXPLORER 02 / BETA</span>
+                <span class="node-loc">VENUS - DOME DEPLOYMENT</span>
+              </div>
+            </button>
+
+            <!-- Explorer Gamma Card -->
+            <button class="explorer-node-card" data-explorer="gamma" onclick="selectExplorer('gamma')">
+              <div class="node-pulse-ring">
+                <span class="node-dot"></span>
+              </div>
+              <div class="node-info">
+                <span class="node-id">EXPLORER 03 / GAMMA</span>
+                <span class="node-loc">EARTH ORBIT - EVA PLATFORM</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Right: Diagnostic Console Details -->
+          <div class="explorer-details-console tech-corners">
+            <div class="console-box-header">
+              <span class="blink-dot"></span>
+              <span>BIOMETRIC FEED // ACTIVE INJECTION</span>
+            </div>
+            
+            <div class="biometric-stats-grid">
+              <div class="biometric-cell">
+                <span class="lbl">DESTINATION</span>
+                <span class="val" id="bio-planet">MARS (SECTOR C)</span>
+              </div>
+              <div class="biometric-cell">
+                <span class="lbl">EXTERNAL TEMP</span>
+                <span class="val text-orange" id="bio-temp">-62°C</span>
+              </div>
+              <div class="biometric-cell">
+                <span class="lbl">HEART RATE</span>
+                <span class="val" id="bio-hr">72 BPM</span>
+              </div>
+              <div class="biometric-cell">
+                <span class="lbl">SUIT OXYGEN</span>
+                <span class="val" id="bio-o2">94%</span>
+              </div>
+              <div class="biometric-cell">
+                <span class="lbl">SUIT INTEGRITY</span>
+                <span class="val" id="bio-vital">98%</span>
+              </div>
+              <div class="biometric-cell">
+                <span class="lbl">HEATING STAGE</span>
+                <span class="val text-green" id="bio-status">HEATING ACTIVE</span>
+              </div>
+            </div>
+
+            <!-- Heart rate line graph preview -->
+            <div class="console-graphic-box">
+              <span class="lbl">ECG TRANSMISSION RATE</span>
+              <svg viewBox="0 0 300 40" class="ecg-graph">
+                <path d="M 0 20 L 50 20 L 55 10 L 60 30 L 65 20 L 120 20 L 125 5 L 130 35 L 135 20 L 180 20 L 185 10 L 190 30 L 195 20 L 250 20 L 255 15 L 260 25 L 265 20 L 300 20" fill="none" stroke="var(--accent)" stroke-width="2" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 2: DYNAMIC PRODUCT DETAILS - DYNAMIC FOR ALL PRODUCTS
+         ========================================================================== -->
+    <div id="view-product-details" class="view-panel">
+      <div class="subpage-header">
+        <button class="back-nav-btn" onclick="navigateToView('products')">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          BACK TO INVENTORY CATALOG
+        </button>
+        <h2 id="details-sub-header">ASTRO PRODUCT DETAIL</h2>
+      </div>
+
+      <div class="hero-section">
+        
+        <!-- Left Column: Specs, HUD controls, description -->
+        <div class="hero-left">
+          <div class="product-tag-container">
+            <span class="new-tag" id="details-tag">TACTICAL INVENTORY</span>
+          </div>
+          <h1 class="product-title" id="product-title-display">PRODUCT TITLE</h1>
+          <div class="price-tag" id="price-display">$0</div>
+          
+          <div class="product-description-panel">
+            <p class="description-text" id="desc-para-display">Product description loading...</p>
+          </div>
+
+          <!-- Accordions -->
+          <div class="accordion-container">
+            <div class="accordion-item">
+              <button class="accordion-header" id="accordion-tech-btn">
+                <span>MATERIALS &amp; TECHNOLOGY</span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="accordion-content" id="details-materials-box">
+                <!-- Loaded dynamically by JS -->
+                <ul>
+                  <li>Loading specs...</li>
+                </ul>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-header" id="accordion-shipping-btn">
+                <span>SHIPPING &amp; RETURNS</span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="accordion-content">
+                <p>Free orbital drop-shipping on orders over $1000. Under normal atmospheric conditions, delivery takes 2-5 Earth days. Return within 30 days for full refund.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Creative HUD and Blueprint Toggles (Jacket Exclusive - Hiddable) -->
+          <div class="sci-fi-control-box" id="details-specials-box">
+            <div class="control-box-title">SYSTEM SETTINGS</div>
+            <div class="toggle-group">
+              <div class="toggle-item">
+                <span class="toggle-label">HUD DIAGNOSTICS</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-hud">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label">BLUEPRINT MODE</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-blueprint">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center Column: Product Photo, Blueprint Layer, and Hotspots -->
+        <div class="hero-center" id="jacket-viewer-container">
+          <div class="hotspots-wrapper" id="hotspots-wrapper">
+            <!-- Main Product Image Layers -->
+            <div class="jacket-image-stack" id="details-image-stack">
+              <!-- Replaced dynamically by JS -->
+              <img src="assets/jacket_white.png" alt="Astro Product" class="jacket-layer active" id="jacket-photo">
+              <img src="assets/jacket_blueprint.png" alt="Astro Product Blueprint" class="jacket-layer" id="jacket-blueprint">
+            </div>
+            
+            <!-- Hotspot Node elements loaded dynamically by JS -->
+          </div>
+          
+          <!-- Interactive Technical Details panel (HUD Mode only) -->
+          <div class="hud-status-panel tech-corners" id="hud-status-overlay">
+            <div class="hud-panel-title">SYSTEM DIAGNOSTICS [V2.0.4]</div>
+            <div class="hud-stats-grid">
+              <div class="hud-stat-cell">
+                <span class="label">INTERNAL TEMPERATURE</span>
+                <span class="value" id="hud-internal-heat">37.0°C</span>
+              </div>
+              <div class="hud-stat-cell">
+                <span class="label">BATTERY ENERGY</span>
+                <span class="value" id="hud-battery">98%</span>
+              </div>
+              <div class="hud-stat-cell">
+                <span class="label">ATM PRESSURE</span>
+                <span class="value" id="hud-pressure">1.02 ATM</span>
+              </div>
+              <div class="hud-stat-cell">
+                <span class="label">SHIELD BARRIER</span>
+                <span class="value" id="hud-water-barrier">99.8%</span>
+              </div>
+            </div>
+            <div class="hud-system-log" id="hud-log-box">SYSTEM: ONLINE / CALIBRATING SENSORS...</div>
+          </div>
+        </div>
+
+        <!-- Right Column: Sizing, Colors, Add to Bag -->
+        <div class="hero-right">
+          <!-- Size Section -->
+          <div class="section-group" id="details-sizes-group">
+            <div class="section-header">
+              <span class="section-title">SIZE</span>
+              <button class="text-link" id="btn-size-guide">SIZE GUIDE</button>
+            </div>
+            <div class="size-selector-grid" id="details-sizes-grid">
+              <!-- Loaded dynamically by JS -->
+            </div>
+          </div>
+
+          <!-- Color Section -->
+          <div class="section-group" id="details-colors-group">
+            <span class="section-title">COLOR</span>
+            <div class="color-selector-grid" id="details-colors-grid">
+              <!-- Loaded dynamically by JS -->
+            </div>
+          </div>
+
+          <!-- Core Actions -->
+          <div class="action-buttons-group">
+            <button class="favorite-btn" id="btn-favorite-action">
+              <span class="fav-icon-wrapper">
+                <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </span>
+              <span>FAVORITE</span>
+            </button>
+            <button class="add-to-bag-btn" id="btn-add-to-bag-dynamic">
+              <span>ADD TO BAG</span>
+              <div class="btn-glow-overlay"></div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Atmospheric Simulation Panel (Weather Controls - Jacket detail page only) -->
+      <section class="weather-simulation-bar" id="details-weather-bar">
+        <div class="weather-panel-heading">
+          <span class="blink-dot"></span>
+          <span class="weather-panel-title">ATMOSPHERIC TESTBED SIMULATOR</span>
+        </div>
+        <div class="weather-controls">
+          <button class="weather-btn active" data-weather="default" id="w-default">
+            <span class="weather-label">CLEAR STANDBY</span>
+          </button>
+          <button class="weather-btn" data-weather="blizzard" id="w-blizzard">
+            <span class="weather-label">PLANETARY BLIZZARD</span>
+          </button>
+          <button class="weather-btn" data-weather="storm" id="w-storm">
+            <span class="weather-label">ACID RAIN STORM</span>
+          </button>
+          <button class="weather-btn" data-weather="void" id="w-void">
+            <span class="weather-label">ORBITAL VACUUM</span>
+          </button>
+        </div>
+        <div class="weather-telemetry">
+          <div class="telem-item"><span class="t-lbl">TEMP:</span> <span class="t-val" id="telem-temp">24°C</span></div>
+          <div class="telem-item"><span class="t-lbl">WIND:</span> <span class="t-val" id="telem-wind">3 km/h</span></div>
+          <div class="telem-item"><span class="t-lbl">OUTER SHIELD:</span> <span class="t-val text-green" id="telem-shield">STABLE</span></div>
+        </div>
+      </section>
+
+      <!-- Mid features data breakdown (Jacket detail page only) -->
+      <section class="features-stats-row" id="details-stats-row">
+        <div class="feature-stat-item">
+          <h3>3X BREATHABLE</h3>
+          <p>Designed with a triple-layer membrane that provides breathability and wind isolation in critical segments.</p>
+          <div class="stat-progress-bar"><div class="progress-fill" style="width: 85%;"></div></div>
+        </div>
+        <div class="feature-stat-item">
+          <h3>3 AREAS PUFFED</h3>
+          <p>The jacket is designed with puffed core segments providing optimal warmth-to-weight performance in cold environments.</p>
+          <div class="stat-progress-bar"><div class="progress-fill" style="width: 90%;"></div></div>
+        </div>
+        <div class="feature-stat-item">
+          <h3>INSULATION</h3>
+          <p>Equipped with thermal barriers to keep body warmth secure, comfortable down to -50°C / -58°F.</p>
+          <div class="stat-progress-bar"><div class="progress-fill" style="width: 95%;"></div></div>
+        </div>
+        <div class="feature-stat-item">
+          <h3>GRAPHICS</h3>
+          <p>Space exploration-themed schematic decals printed in specialized micro-pigments that don't crack.</p>
+          <div class="stat-progress-bar"><div class="progress-fill" style="width: 78%;"></div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 3: PRODUCTS CATALOG PAGE
+         ========================================================================== -->
+    <div id="view-products" class="view-panel">
+      <div class="subpage-header">
+        <button class="back-nav-btn" onclick="navigateToView('hero')">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          BACK TO BRAND CORE
+        </button>
+        <h2>ORBITAL APPAREL CATALOG</h2>
+        <p>Explore the full tactical inventory engineered by Astro Apparel Labs.</p>
+      </div>
+
+      <div class="catalog-grid">
+        <!-- Catalog Item 1: The Armor II Jacket -->
+        <div class="catalog-card primary-card">
+          <div class="catalog-img-wrapper">
+            <img src="assets/jacket_white.png" alt="Astro Winter Armor II">
+            <div class="catalog-overlay-tag">FLAGSHIP</div>
+          </div>
+          <div class="catalog-info">
+            <div class="catalog-meta">
+              <span class="cat-tag">PLANETARY LANDFALL</span>
+              <span class="cat-price">$560</span>
+            </div>
+            <h3>ASTRO WINTER ARMOR II</h3>
+            <p class="catalog-desc">The ultimate atmospheric shield. Thermal nano-filaments, aerogel linings, and flexible graphene waterproof ripstop shell.</p>
+            <div class="catalog-actions">
+              <button class="catalog-view-btn" onclick="navigateToProductDetails('jacket')">VIEW DETAILS</button>
+              <button class="catalog-add-btn" onclick="addCatalogItemToCart('jacket')">ADD TO BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalog Item 2: Recon Boots -->
+        <div class="catalog-card">
+          <div class="catalog-img-wrapper">
+            <img src="assets/product_boots.png" alt="Astro Recon Boots">
+          </div>
+          <div class="catalog-info">
+            <div class="catalog-meta">
+              <span class="cat-tag">PLANETARY LANDFALL</span>
+              <span class="cat-price">$320</span>
+            </div>
+            <h3>ASTRO RECON BOOTS</h3>
+            <p class="catalog-desc">Engineered for rough ice and crag terrains. Features electromagnetic locking soles and active ankle compression seals.</p>
+            <div class="catalog-actions">
+              <button class="catalog-view-btn" onclick="navigateToProductDetails('boots')">VIEW DETAILS</button>
+              <button class="catalog-add-btn" onclick="addCatalogItemToCart('boots')">ADD TO BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalog Item 3: Nano-Grip Gloves -->
+        <div class="catalog-card">
+          <div class="catalog-img-wrapper">
+            <img src="assets/product_gloves.png" alt="Astro Nano-Grip Gloves">
+          </div>
+          <div class="catalog-info">
+            <div class="catalog-meta">
+              <span class="cat-tag">DEEP SPACE ISOLATION</span>
+              <span class="cat-price">$140</span>
+            </div>
+            <h3>ASTRO NANO-GRIP GLOVES</h3>
+            <p class="catalog-desc">Touchscreen compatible carbon mesh utility gloves. Micro-suction pads deliver absolute grip in vacuum conditions.</p>
+            <div class="catalog-actions">
+              <button class="catalog-view-btn" onclick="navigateToProductDetails('gloves')">VIEW DETAILS</button>
+              <button class="catalog-add-btn" onclick="addCatalogItemToCart('gloves')">ADD TO BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalog Item 4: Holographic Visor -->
+        <div class="catalog-card">
+          <div class="catalog-img-wrapper">
+            <img src="assets/product_visor.png" alt="Astro Holographic Visor">
+          </div>
+          <div class="catalog-info">
+            <div class="catalog-meta">
+              <span class="cat-tag">ORBITAL OPERATIONS</span>
+              <span class="cat-price">$450</span>
+            </div>
+            <h3>ASTRO HOLOGRAPHIC VISOR</h3>
+            <p class="catalog-desc">Smart targeting and telemetry overlays injected directly into the anti-glare visor screen. Links with suit diagnostics.</p>
+            <div class="catalog-actions">
+              <button class="catalog-view-btn" onclick="navigateToProductDetails('visor')">VIEW DETAILS</button>
+              <button class="catalog-add-btn" onclick="addCatalogItemToCart('visor')">ADD TO BAG</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catalog Item 5: Eclipse Backpack -->
+        <div class="catalog-card">
+          <div class="catalog-img-wrapper">
+            <img src="assets/product_backpack.png" alt="Astro Eclipse Backpack">
+          </div>
+          <div class="catalog-info">
+            <div class="catalog-meta">
+              <span class="cat-tag">ORBITAL OPERATIONS</span>
+              <span class="cat-price">$280</span>
+            </div>
+            <h3>ASTRO ECLIPSE BACKPACK</h3>
+            <p class="catalog-desc">Modular tactical backpack built in high-strength Kevlar weave. Houses the oxygen canister clamps and external solar recharge links.</p>
+            <div class="catalog-actions">
+              <button class="catalog-view-btn" onclick="navigateToProductDetails('backpack')">VIEW DETAILS</button>
+              <button class="catalog-add-btn" onclick="addCatalogItemToCart('backpack')">ADD TO BAG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 4: CATEGORY PAGE
+         ========================================================================== -->
+    <div id="view-category" class="view-panel">
+      <div class="subpage-header">
+        <button class="back-nav-btn" onclick="navigateToView('hero')">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          BACK TO BRAND CORE
+        </button>
+        <h2>MISSION CATEGORIES</h2>
+        <p>Astro products are sorted by operational environment and stress thresholds.</p>
+      </div>
+
+      <div class="category-grid-layout">
+        <!-- Collection 1 -->
+        <div class="category-block-card" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url('assets/detail_puffed.png');">
+          <div class="category-block-content">
+            <span class="category-block-code">SEC-01 / LANDFALL</span>
+            <h3>PLANETARY LANDFALL</h3>
+            <p>Engineered for planetary surface operations. High structural resilience against storms, blizzards, acid precipitation, and rock abrasion.</p>
+            <div class="category-products-list">
+              <span>Armor II Jacket</span> • <span>Recon Boots</span>
+            </div>
+            <button class="category-explore-btn" onclick="navigateToView('products')">EXPLORE LANDFALL GEAR</button>
+          </div>
+        </div>
+
+        <!-- Collection 2 -->
+        <div class="category-block-card" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url('assets/detail_breathable.png');">
+          <div class="category-block-content">
+            <span class="category-block-code">SEC-02 / ORBITAL</span>
+            <h3>ORBITAL OPERATIONS</h3>
+            <p>Tailored for zero-gravity orbital stations and low-atmosphere vehicular activities. Extreme lightweight composites and vacuum pressure gaskets.</p>
+            <div class="category-products-list">
+              <span>Holographic Visor</span> • <span>Eclipse Backpack</span>
+            </div>
+            <button class="category-explore-btn" onclick="navigateToView('products')">EXPLORE ORBITAL GEAR</button>
+          </div>
+        </div>
+
+        <!-- Collection 3 -->
+        <div class="category-block-card" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url('assets/detail_insulation.png');">
+          <div class="category-block-content">
+            <span class="category-block-code">SEC-03 / DEEP SPACE</span>
+            <h3>DEEP SPACE ISOLATION</h3>
+            <p>Heavy duty hazard suits designed for direct deep-space walks and high radiation zones. Features lead-composite woven layers and thermal seals.</p>
+            <div class="category-products-list">
+              <span>Nano-Grip Gloves</span>
+            </div>
+            <button class="category-explore-btn" onclick="navigateToView('products')">EXPLORE RADIATION GEAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 5: MORE (Tech Specs Page)
+         ========================================================================== -->
+    <div id="view-more" class="view-panel">
+      <div class="subpage-header">
+        <button class="back-nav-btn" onclick="navigateToView('hero')">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          BACK TO BRAND CORE
+        </button>
+        <h2>TECHNICAL MANUAL &amp; MATRIX</h2>
+        <p>Examine the telemetry comparisons and laboratory reports of the Astro suit systems.</p>
+      </div>
+
+      <div class="tech-specs-container">
+        
+        <!-- Spec Table -->
+        <div class="tech-table-wrapper tech-corners">
+          <div class="tech-card-title">SUIT PERFORMANCE MATRIX</div>
+          <table class="tech-matrix-table">
+            <thead>
+              <tr>
+                <th>METRIC SPECIFICATION</th>
+                <th>ASTRO ARMOR II</th>
+                <th>ASTRO ARMOR I</th>
+                <th>STD Spacesuit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Thermal Limit Low</td>
+                <td class="highlight-orange">-50°C / -58°F</td>
+                <td>-25°C / -13°F</td>
+                <td>0°C / 32°F</td>
+              </tr>
+              <tr>
+                <td>Active Zones</td>
+                <td class="highlight-orange">3 Coils Mapping</td>
+                <td>1 Core Panel</td>
+                <td>Passive Only</td>
+              </tr>
+              <tr>
+                <td>Shell Thickness</td>
+                <td class="highlight-orange">1.8 mm Ripstop</td>
+                <td>3.2 mm Canvas</td>
+                <td>5.0 mm Rubber</td>
+              </tr>
+              <tr>
+                <td>Water Entry Gasket</td>
+                <td class="highlight-orange">99.8% Hermetic</td>
+                <td>95.0% Zip-seal</td>
+                <td>80.0% Velcro</td>
+              </tr>
+              <tr>
+                <td>Graphene Shielding</td>
+                <td class="highlight-orange">Dual Injection</td>
+                <td>Single Sprayed</td>
+                <td>Not Applied</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Spec Visual Charts -->
+        <div class="tech-charts-grid">
+          <!-- Graphic 1: Temperature curves -->
+          <div class="tech-chart-card">
+            <div class="tech-card-title">THERMAL RETENTION PROFILE</div>
+            <div class="svg-chart-wrapper">
+              <svg viewBox="0 0 300 150" class="tech-svg-chart">
+                <!-- Grid Lines -->
+                <line x1="30" y1="20" x2="280" y2="20" stroke="rgba(255,255,255,0.05)" />
+                <line x1="30" y1="60" x2="280" y2="60" stroke="rgba(255,255,255,0.05)" />
+                <line x1="30" y1="100" x2="280" y2="100" stroke="rgba(255,255,255,0.05)" />
+                <line x1="30" y1="130" x2="280" y2="130" stroke="rgba(255,255,255,0.2)" />
+                <line x1="30" y1="20" x2="30" y2="130" stroke="rgba(255,255,255,0.2)" />
+                <!-- Armor II Curve (Orange) -->
+                <path d="M 30 50 Q 100 45 160 55 T 280 62" fill="none" stroke="var(--accent)" stroke-width="3" />
+                <!-- Armor I Curve (Grey) -->
+                <path d="M 30 75 Q 100 80 160 100 T 280 120" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="4" />
+                <!-- Labels -->
+                <text x="35" y="40" fill="var(--accent)" font-family="monospace" font-size="8">ARMOR II (ACTIVE)</text>
+                <text x="35" y="90" fill="var(--text-muted)" font-family="monospace" font-size="8">ARMOR I (PASSIVE)</text>
+                <text x="250" y="142" fill="var(--text-muted)" font-family="monospace" font-size="8">TIME (H)</text>
+                <text x="10" y="20" fill="var(--text-muted)" font-family="monospace" font-size="8" transform="rotate(-90 10 20)">TEMP (C)</text>
+              </svg>
+            </div>
+            <p class="chart-caption">Active carbon nanotubes maintain a stable heat pocket over extended exposure hours in sub-zero terrains.</p>
+          </div>
+
+          <!-- Graphic 2: Battery performance -->
+          <div class="tech-chart-card">
+            <div class="tech-card-title">SHIELD INTEGRITY VS IMPACT ENERGY</div>
+            <div class="svg-chart-wrapper">
+              <svg viewBox="0 0 300 150" class="tech-svg-chart">
+                <line x1="30" y1="20" x2="280" y2="20" stroke="rgba(255,255,255,0.05)" />
+                <line x1="30" y1="60" x2="280" y2="60" stroke="rgba(255,255,255,0.05)" />
+                <line x1="30" y1="100" x2="280" y2="100" stroke="rgba(255,255,255,0.05)" />
+                <line x1="30" y1="130" x2="280" y2="130" stroke="rgba(255,255,255,0.2)" />
+                <line x1="30" y1="20" x2="30" y2="130" stroke="rgba(255,255,255,0.2)" />
+                <!-- Shield Curve (Orange) -->
+                <path d="M 30 120 L 100 90 L 180 50 L 280 20" fill="none" stroke="var(--accent)" stroke-width="3" />
+                <circle cx="180" cy="50" r="4" fill="var(--accent)" />
+                <!-- Labels -->
+                <text x="190" y="48" fill="var(--accent)" font-family="monospace" font-size="8">CRITICAL RESILIENCE</text>
+                <text x="230" y="142" fill="var(--text-muted)" font-family="monospace" font-size="8">ENERGY (KJ)</text>
+                <text x="35" y="15" fill="var(--text-muted)" font-family="monospace" font-size="8">SHIELD DEFENSE (%)</text>
+              </svg>
+            </div>
+            <p class="chart-caption">Dual-injected graphene lattice layers dissipate force energy across the molecular grid, preventing fiber penetration.</p>
+          </div>
+        </div>
+
+        <!-- Document Downloads -->
+        <div class="tech-downloads-panel">
+          <div class="tech-card-title">SECURE ACCESS DOCUMENTATION</div>
+          <div class="download-links-grid">
+            <a href="#" class="download-card-link" onclick="event.preventDefault(); playSound('success'); alert('Downloading: ASTRO_ARMOR_II_MANUAL_V2.pdf (14.2 MB) from secure node...');">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              <div>
+                <span class="dl-title">OPERATIONS MANUAL [PDF]</span>
+                <span class="dl-meta">14.2 MB • REVISION 2.0.4</span>
+              </div>
+            </a>
+            <a href="#" class="download-card-link" onclick="event.preventDefault(); playSound('success'); alert('Downloading: BATTERY_DIAGNOSTICS_OCT2026.log (112 KB)...');">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              <div>
+                <span class="dl-title">BATTERY CALIBRATION [LOG]</span>
+                <span class="dl-meta">112 KB • OCT 2026 CYCLE</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 6: ABOUT US PAGE
+         ========================================================================== -->
+    <div id="view-about" class="view-panel">
+      <div class="subpage-header">
+        <button class="back-nav-btn" onclick="navigateToView('hero')">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          BACK TO BRAND CORE
+        </button>
+        <h2>ASTRO APPAREL LABS</h2>
+        <p>A division of Astro Space Systems, fabricating armor apparel for planetary pioneers since 2088.</p>
+      </div>
+
+      <div class="about-container">
+        
+        <!-- Lab Image Section -->
+        <div class="about-hero-block">
+          <div class="about-text-content">
+            <h3>DESIGN PHILOSOPHY</h3>
+            <p>Standard spacesuits are heavy, rigid, and restrict movement. Astro Apparel Labs was founded on a simple question: <em>Can we construct planetary exploration gear that feels like a normal windbreaker but delivers the isolation protection of an orbital capsule?</em></p>
+            <p>By blending advanced carbon aerogels, graphene fabrications, and active carbon nanotube lattices, we produce smart winter wear capable of withstanding absolute zero atmospheres without restricting flexibility.</p>
+          </div>
+          <div class="about-stats-panel">
+            <div class="about-stat-box">
+              <span class="num">2088</span>
+              <span class="lbl">FOUNDED IN ORBIT</span>
+            </div>
+            <div class="about-stat-box">
+              <span class="num">1.8mm</span>
+              <span class="lbl">MINIMUM THICKNESS</span>
+            </div>
+            <div class="about-stat-box">
+              <span class="num">15</span>
+              <span class="lbl">PLANETS EXPLORED</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Timeline -->
+        <div class="about-timeline-wrapper tech-corners">
+          <div class="tech-card-title">LABS HISTORICAL RECORD LOG</div>
+          <div class="timeline-row">
+            <!-- Node 1 -->
+            <div class="timeline-node">
+              <div class="node-year">2088</div>
+              <div class="node-title">Astro Division Created</div>
+              <p class="node-desc">Astro Space Systems funds the Apparel Labs inside Lunar Sector 4 to research thermal ripstop materials.</p>
+            </div>
+            <!-- Node 2 -->
+            <div class="timeline-node">
+              <div class="node-year">2091</div>
+              <div class="node-title">Aerogel Injection Patent</div>
+              <p class="node-desc">Successful synthesis of flexible thin-film aerogel layers, allowing suit insulation under 2mm thickness.</p>
+            </div>
+            <!-- Node 3 -->
+            <div class="timeline-node">
+              <div class="node-year">2095</div>
+              <div class="node-title">Armor Series Launch</div>
+              <p class="node-desc">Launch of Winter Armor I. Used during the Mars Sector C expedition, sustaining crews down to -30°C.</p>
+            </div>
+            <!-- Node 4 -->
+            <div class="timeline-node">
+              <div class="node-year">2096</div>
+              <div class="node-title">Armor II Active Heating</div>
+              <p class="node-desc">Integration of active nanotube heating coils and HUD diagnostic nodes. Absolute climate isolation achieved.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 7: CONTACT (Subspace Transceiver Console)
+         ========================================================================== -->
+    <div id="view-contact" class="view-panel">
+      <div class="subpage-header">
+        <button class="back-nav-btn" onclick="navigateToView('hero')">
+          <svg class="back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          BACK TO BRAND CORE
+        </button>
+        <h2>SUBSPACE TRANSMISSION CONSOLE</h2>
+        <p>Inject encrypted communications directly into the Astro Apparel Labs central database queue.</p>
+      </div>
+
+      <div class="contact-console-container">
+        <!-- Hologram terminal form -->
+        <div class="console-box tech-corners">
+          <div class="console-box-header">
+            <span class="blink-dot"></span>
+            <span>TRANSMITTER TERMINAL // ONLINE</span>
+          </div>
+          
+          <form id="contact-transceiver-form" onsubmit="handleContactSubmit(event)">
+            <div class="console-input-row">
+              <div class="console-field-group">
+                <label for="c-sender">ORIGIN STATION NAME</label>
+                <input type="text" id="c-sender" placeholder="Pioneer / Station Alpha" required value="Station Alpha">
+              </div>
+              <div class="console-field-group">
+                <label for="c-vector">COMMUNICATION VECTOR (EMAIL)</label>
+                <input type="email" id="c-vector" placeholder="explorer@orbit.net" required value="explorer@orbit.net">
+              </div>
+            </div>
+            <div class="console-field-group">
+              <label for="c-payload">ENCRYPTED MESSAGE PAYLOAD</label>
+              <textarea id="c-payload" rows="6" placeholder="Type transmission details..." required>Requesting bulk dispatch parameters of Astro Winter Armor II for Sector Beta deployment.</textarea>
+            </div>
+
+            <button type="submit" class="console-submit-btn">
+              <span>TRANSMIT ENCRYPTED PAYLOAD</span>
+              <div class="console-btn-scan"></div>
+            </button>
+          </form>
+        </div>
+
+        <!-- Real-time transmission status board -->
+        <div class="console-logs-box tech-corners">
+          <div class="console-box-header">
+            <span>TRANSMISSION SIGNAL FEED</span>
+          </div>
+          <div class="console-log-lines" id="contact-logs-board">
+            <div class="log-line text-green">[SYSTEM]: Transceiver is idle. Ready for injection.</div>
+            <div class="log-line">[SYSTEM]: Secure channel mapping established.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Side Shopping Cart Drawer -->
+  <div class="cart-drawer-overlay" id="cart-drawer">
+    <div class="cart-drawer-container">
+      <div class="drawer-header">
+        <h3>SHOPPING BAG</h3>
+        <button class="close-drawer-btn" id="btn-cart-close" aria-label="Close cart">&times;</button>
+      </div>
+      
+      <div class="drawer-body" id="cart-items-container">
+        <!-- Dynamic Cart Items loaded by JS -->
+        <div class="empty-cart-message">Your shopping bag is currently empty.</div>
+      </div>
+
+      <div class="drawer-footer">
+        <div class="price-summary">
+          <div class="summary-row">
+            <span>SUBTOTAL</span>
+            <span id="cart-subtotal">$0</span>
+          </div>
+          <div class="summary-row">
+            <span>ORBITAL SHIPPING</span>
+            <span id="cart-shipping">FREE</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>TOTAL PRICE</span>
+            <span id="cart-total">$0</span>
+          </div>
+        </div>
+        <button class="checkout-btn" id="btn-checkout">PROCEED TO SECURE CHECKOUT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Calculator Modal -->
+  <div class="modal-overlay" id="size-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>RECOMMENDED SIZE CALCULATOR</h3>
+        <button class="close-modal-btn" id="btn-size-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter your measurements to calculate your custom fit profile for the Astro Armor series.</p>
+        
+        <div class="input-form">
+          <div class="input-field-group">
+            <label for="calc-height">HEIGHT (CM)</label>
+            <input type="number" id="calc-height" min="120" max="230" placeholder="e.g. 175" value="175">
+          </div>
+          <div class="input-field-group">
+            <label for="calc-weight">WEIGHT (KG)</label>
+            <input type="number" id="calc-weight" min="30" max="150" placeholder="e.g. 70" value="70">
+          </div>
+          <button class="submit-calc-btn" id="btn-run-calc">CALIBRATE RECOMMENDED FIT</button>
+        </div>
+
+        <div class="calc-result" id="calc-result-box" style="display: none;">
+          <div class="result-title">CALIBRATION RESULT:</div>
+          <div class="result-size" id="recommended-size-text">-</div>
+          <p class="result-desc" id="recommended-size-desc">Fits perfectly. Provides ample chest movement and sleeve sleeve lengths for cold protection.</p>
+          <button class="use-size-btn" id="btn-apply-size">APPLY THIS SIZE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulated Checkout Process Modal -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-container checkout-container">
+      <div class="modal-header">
+        <h3>SECURE QUANTUM CHECKOUT</h3>
+        <button class="close-modal-btn" id="btn-checkout-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+          <span class="step active" id="step-1-indicator">01 / SHIFT</span>
+          <span class="step-line"></span>
+          <span class="step" id="step-2-indicator">02 / SECURE PAYMENT</span>
+          <span class="step-line"></span>
+          <span class="step" id="step-3-indicator">03 / CONFIRMATION</span>
+        </div>
+
+        <!-- Step 1 Content: Shipping Info -->
+        <div class="checkout-step-content" id="checkout-step-1">
+          <h4>SHIPPING DESTINATION</h4>
+          <div class="input-form">
+            <div class="input-field-group">
+              <label for="ship-name">FULL NAME</label>
+              <input type="text" id="ship-name" placeholder="John Doe" value="John Doe">
+            </div>
+            <div class="input-field-group">
+              <label for="ship-address">PHYSICAL ADDRESS / DOME SECTOR</label>
+              <input type="text" id="ship-address" placeholder="104 Sector Alpha, Neo City" value="104 Sector Alpha, Neo City">
+            </div>
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="ship-city">CITY / PLANET</label>
+                <input type="text" id="ship-city" placeholder="Earth" value="Earth">
+              </div>
+              <div class="input-field-group">
+                <label for="ship-zip">SECTOR CODE</label>
+                <input type="text" id="ship-zip" placeholder="882104" value="882104">
+              </div>
+            </div>
+            <button class="checkout-next-btn" id="btn-checkout-to-step-2">PROCEED TO SECURE PAYMENT</button>
+          </div>
+        </div>
+
+        <!-- Step 2 Content: Credit Card Info -->
+        <div class="checkout-step-content" id="checkout-step-2" style="display: none;">
+          <h4>CREDIT CARD SECURITY INJECTION</h4>
+          <div class="input-form">
+            <div class="input-field-group">
+              <label for="pay-card">CREDIT CARD NUMBER</label>
+              <input type="text" id="pay-card" placeholder="4111 2222 3333 4444" value="4111 2222 3333 4444" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="pay-expiry">EXPIRY DATE</label>
+                <input type="text" id="pay-expiry" placeholder="MM/YY" value="12/28" maxlength="5">
+              </div>
+              <div class="input-field-group">
+                <label for="pay-cvv">SECURE PIN / CVV</label>
+                <input type="password" id="pay-cvv" placeholder="•••" value="123" maxlength="3">
+              </div>
+            </div>
+            <button class="checkout-next-btn" id="btn-checkout-complete">AUTHORIZE DEBIT TRANSACTION</button>
+          </div>
+        </div>
+
+        <!-- Step 3 Content: Success Receipt -->
+        <div class="checkout-step-content" id="checkout-step-3" style="display: none;">
+          <div class="success-screen">
+            <div class="success-icon-ring">
+              <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h3>TRANSACTION COMPLETED</h3>
+            <p>Your authorization was successful. Your shipment of Astro apparel is queued for packing and planetary delivery.</p>
+            <div class="receipt-ticket">
+              <div class="receipt-row">
+                <span>ORDER NUMBER</span>
+                <span class="mono" id="receipt-order-no">#AST-55291240</span>
+              </div>
+              <div class="receipt-row">
+                <span>SHIPPED TO</span>
+                <span id="receipt-name">-</span>
+              </div>
+              <div class="receipt-row">
+                <span>TOTAL CHARGED</span>
+                <span class="receipt-total" id="receipt-total-price">$0</span>
+              </div>
+            </div>
+            <button class="checkout-finish-btn" id="btn-checkout-finish">RETURN TO TERMINAL</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-links-grid">
+      <div class="footer-column">
+        <h4>INVENTORY</h4>
+        <a href="#" onclick="navigateToProductDetails('jacket')">Jacket Series</a>
+        <a href="#" onclick="navigateToProductDetails('boots')">Footwear Protection</a>
+        <a href="#" onclick="navigateToProductDetails('gloves')">Manual Interface</a>
+        <a href="#" onclick="navigateToProductDetails('visor')">Visor Systems</a>
+      </div>
+      <div class="footer-column">
+        <h4>LABORATORY</h4>
+        <a href="#" onclick="navigateToView('about')">Design Pillars</a>
+        <a href="#" onclick="navigateToView('about')">Labs History</a>
+        <a href="#" onclick="navigateToView('about')">Timeline Logs</a>
+        <a href="#" onclick="navigateToView('more')">Specifications Table</a>
+      </div>
+      <div class="footer-column">
+        <h4>TRANSMISSIONS</h4>
+        <a href="#" onclick="navigateToView('contact')">Console Transceiver</a>
+        <a href="#" onclick="navigateToView('contact')">Station Enquiries</a>
+        <a href="#" onclick="navigateToView('contact')">System Injections</a>
+      </div>
+      <div class="footer-column">
+        <h4>SYSTEM STATUS</h4>
+        <div class="status-indicator">
+          <span class="status-pulse-dot"></span>
+          <span class="status-text">SHIELD: ACTIVE [99.8%]</span>
+        </div>
+        <p class="status-meta">SECURED BY QUANTUM MATRIX CRYPTO NODES.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ASTRO APPAREL LABS. ALL ORBITAL DATA CAPTURED SECURED BY PROTOCOLS.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
