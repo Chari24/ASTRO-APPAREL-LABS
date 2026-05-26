@@ -407,11 +407,17 @@ body.weather-blizzard #frost-overlay {
 }
 .brand-hero-header h2 {
   font-family: var(--font-tech);
-  font-size: 3.2rem;
+  font-size: 3.5rem;
   font-weight: 800;
   letter-spacing: 3px;
-  color: var(--text-main);
   margin: 15px 0 20px 0;
+  background: linear-gradient(to right, #fff, var(--text-muted), #fff);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shineWave 4s linear infinite;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 .brand-hero-header p {
   font-size: 0.95rem;
@@ -434,14 +440,30 @@ body.weather-blizzard #frost-overlay {
   transition: all var(--transition-fast);
 }
 .brand-cta-btn.btn-primary {
-  background: var(--accent);
+  background: linear-gradient(45deg, var(--accent), #ff9a00, var(--accent));
+  background-size: 200% auto;
   color: var(--text-dark);
   border: none;
   box-shadow: 0 4px 15px var(--accent-glow);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.brand-cta-btn.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: all 0.5s ease;
+  z-index: -1;
 }
 .brand-cta-btn.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px var(--accent-glow);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px var(--accent-glow);
+  background-position: right center;
+}
+.brand-cta-btn.btn-primary:hover::before {
+  left: 100%;
 }
 .brand-cta-btn.btn-secondary {
   background: transparent;
@@ -502,6 +524,8 @@ body.weather-blizzard #frost-overlay {
 .explorer-node-card:hover {
   border-color: var(--accent);
   background: rgba(255, 255, 255, 0.04);
+  transform: translateX(10px);
+  box-shadow: -5px 5px 15px rgba(255, 106, 0, 0.1);
 }
 .explorer-node-card.active {
   border-color: var(--accent);
@@ -3137,5 +3161,15 @@ body.weather-storm #telem-shield { color: #ffaa00; }
   100% {
     text-shadow: 1px 0 0 var(--accent), -1px 0 0 #00e5ff;
     transform: translate(0);
+  }
+}
+
+/* Shine wave effect for futuristic glow */
+@keyframes shineWave {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
   }
 }
